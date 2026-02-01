@@ -675,5 +675,32 @@ kbd{border:1px solid var(--line);border-bottom-width:2px;border-radius:6px;paddi
   apply();
 })();
 </script>
+ <script>
+(function () {
+  const MAX_LEN = 48; // keeps pills readable
+
+  document.querySelectorAll('.tool').forEach(tool => {
+    const title = tool.getAttribute('data-title') || '';
+    const pill = tool.querySelector('.pill');
+    if (!pill) return;
+
+    // Clean + normalize description
+    let desc = title
+      .replace(/\s+https?:\/\/\S+/gi, '') // remove URLs
+      .replace(/\s{2,}/g, ' ')
+      .trim();
+
+    // Capitalize first letter
+    desc = desc.charAt(0).toUpperCase() + desc.slice(1);
+
+    // Truncate if needed
+    if (desc.length > MAX_LEN) {
+      desc = desc.slice(0, MAX_LEN - 1) + '…';
+    }
+
+    pill.textContent = desc || 'Reference tool';
+  });
+})();
+</script>
 </body>
 </html>
