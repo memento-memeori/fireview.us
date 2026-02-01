@@ -5,32 +5,112 @@
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>OSINT Tools Directory</title>
 <style>
-::root{--bg:#0b0c10;--panel:#111319;--text:#e6e7ea;--muted:#a9abb3;--line:#45050C;--accent:#7aa2ff;}
-*{box-sizing:border-box} body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--text);}
-header{position:sticky;top:0;z-index:10;background:rgba(11,12,16,.92);backdrop-filter: blur(8px);border-bottom:1px solid var(--line);}
+:root{
+  --bg:#111827;        /* darkest background */
+  --panel:#1f3f4b;     /* cards / sections */
+  --line:#22505f;      /* borders */
+  --muted:#6b7280;     /* secondary text */
+  --text:#e5e7eb;      /* primary text */
+}
+*{box-sizing:border-box} body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+header{
+  position:sticky;
+  top:0;
+  z-index:10;
+  background:rgba(17,24,39,.95);
+  border-bottom:1px solid var(--line);
+}
 .wrap{max-width:1100px;margin:0 auto;padding:14px 16px;}
 h1{margin:0;font-size:20px;font-weight:650;}
 .sub{margin-top:6px;color:var(--muted);font-size:13px;line-height:1.35;}
 .controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px}
-input[type="search"]{flex:1;min-width:220px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--text);outline:none;}
-input[type="search"]::placeholder{color:#7c8090}
+input[type="search"]{
+  flex:1;
+  min-width:220px;
+  padding:10px 12px;
+  border:1px solid var(--line);
+  border-radius:10px;
+  background:#111827;
+  color:var(--text);
+}
+input[type="search"]::placeholder{
+  color:var(--muted);
+}
 .badges{display:flex;gap:8px;flex-wrap:wrap}
-.badge{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--panel);color:var(--text);
- padding:7px 10px;border-radius:999px;font-size:12px;text-decoration:none;white-space:nowrap;}
+.badge{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);
+  background:var(--panel);
+  color:var(--text);
+  padding:7px 10px;
+  border-radius:999px;
+  font-size:12px;
+  text-decoration:none;}
 .badge:hover{border-color:#2f3550}
 .badge .count{color:var(--muted);font-variant-numeric: tabular-nums;}
 main{max-width:1100px;margin:0 auto;padding:18px 16px 60px;}
-section{margin:20px 0 26px;padding:16px;border:1px solid #F0A202;border-radius:14px;background:var(--panel);}
+section{
+  margin:20px 0 26px;
+  padding:16px;
+  border:1px solid var(--line);
+  border-radius:14px;
+  background:var(--panel);
+}
 section h2{margin:0 0 10px;font-size:18px}
 .note{color:var(--muted);font-size:12px;line-height:1.45;margin:6px 0 0}
 ul{list-style:none;margin:12px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px;}
-li{border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:#0e1016;}
-a.link{color:var(--text);text-decoration:none;font-weight:600;font-size:14px;line-height:1.25; display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;}
-a.link:hover{color:var(--accent)}
-.meta{margin-top:6px;color:var(--muted);font-size:12px; display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;}
-.pill{border:1px solid var(--line);border-radius:0;padding:2px 8px;font-size:11px;color:var(--muted);}
+li{
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:10px 12px;
+  background:#111827;
+  text-align:center;
+}
+a.link{
+  display:block;
+  color:var(--text);
+  text-decoration:none;
+  font-weight:600;
+  font-size:14px;
+  line-height:1.25;
+  text-align:center;
+}
+a.link:hover{
+  color:#e5e7eb;
+  text-decoration:underline;
+}
+.meta{
+  margin-top:6px;
+  font-size:12px;
+  color:var(--muted);
+
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:6px;
+  text-align:center;
+}
+.pill{
+  border:1px solid var(--line);
+  border-radius:0;          /* square */
+  padding:2px 8px;
+  font-size:11px;
+  color:var(--muted);
+  background:transparent;
+}
 footer{max-width:1100px;margin:0 auto;padding:14px 16px 28px;color:var(--muted);font-size:12px;}
-kbd{border:1px solid var(--line);border-bottom-width:2px;border-radius:6px;padding:1px 6px;background:#0e1016;color:var(--text);font-size:11px;}
+kbd{
+  border:1px solid var(--line);
+  border-bottom-width:2px;
+  border-radius:6px;
+  padding:1px 6px;
+  background:#111827;
+  color:var(--text);
+  font-size:11px;
+}
 .hidden{display:none !important;}
 </style>
 </head>
