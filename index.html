@@ -251,9 +251,9 @@ li.tool{
 <div class="link">Clustrmaps - Free People Search Engine</div>
 <div class="meta"><a class="url-link" href="https://clustrmaps.com/" rel="noopener noreferrer" target="_blank">https://clustrmaps.com/</a><span class="pill"></span></div>
 </li>
-<li class="tool" data-title="dating sites | usersearch usersearch.org https://usersearch.org/index.php">
+<li class="tool" data-title="dating sites | Username usersearch.org https://www.usersearch.com">
 <div class="link">Dating Sites | UserSearch</div>
-<div class="meta"><a class="url-link" href="https://usersearch.org/index.php" rel="noopener noreferrer" target="_blank">https://usersearch.org/index.php</a><span <="" class="pill" span=""></span></div>
+<div class="meta"><a class="url-link" href="https://www.usersearch.com" rel="noopener noreferrer" target="_blank">https://usersearch.org/index.php</a><span <="" class="pill" span=""></span></div>
 </li>
 <li class="tool" data-title="digital footprint check digitalfootprintcheck.com https://www.digitalfootprintcheck.com/checks/free-checker.html">
 <div class="link">Digital Footprint Check</div>
@@ -878,78 +878,6 @@ li.tool{
     window.open(url, '_blank', 'noopener,noreferrer');
     menu.value = '';
   });
-})();
-  
-// JS Search Bar Redirect Function
- (function addPerToolSearchAuto(){
-  // Domain -> search results URL template. Must include {q}.
-  const SEARCH_TEMPLATES = {
-    "urlscan.io": "https://urlscan.io/search/#" + encodeURIComponent("{q}"),
-    "whois.com": "https://www.whois.com/whois/{q}",
-    "shodan.io": "https://www.shodan.io/search?query={q}",
-    "archive.org": "https://web.archive.org/web/*/{q}",
-    "archive.is": "https://archive.is/{q}",
-    "dnslytics.com": "https://dnslytics.com/search?q={q}",
-    "securitytrails.com": "https://securitytrails.com/list/apex_domain/{q}",
-
-    // Examples you can add once sties query format conifmed:
-    // "informationlaundromat.com": "https://informationlaundromat.com/search?q={q}",
-    // "redective.com": "https://www.redective.com/?q={q}"
-  };
-
-  function getDomain(url){
-    try { return new URL(url).hostname.replace(/^www\./, ""); }
-    catch { return ""; }
-  }
-
-  const tools = Array.from(document.querySelectorAll(".tool"));
-
-  tools.forEach(tool => {
-    const a = tool.querySelector("a.link");
-    if (!a) return;
-
-    // If author already set a template, respect it.
-    let tpl = tool.getAttribute("data-search-template");
-
-    if (!tpl) {
-      const domain = getDomain(a.href);
-      tpl = SEARCH_TEMPLATES[domain] || "";
-      if (tpl) tool.setAttribute("data-search-template", tpl);
-    }
-
-    tpl = tool.getAttribute("data-search-template") || "";
-    if (!tpl.includes("{q}")) return;
-
-    // Avoid adding twice
-    if (tool.querySelector("form.tool-search")) return;
-
-    const wrap = document.createElement("form");
-    wrap.className = "tool-search";
-    wrap.setAttribute("autocomplete", "off");
-
-    const input = document.createElement("input");
-    input.type = "search";
-    input.placeholder = "Search this site…";
-
-    const btn = document.createElement("button");
-    btn.type = "submit";
-    btn.textContent = "Search";
-
-    wrap.appendChild(input);
-    wrap.appendChild(btn);
-
-    wrap.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const q = (input.value || "").trim();
-      if (!q) return;
-
-      const url = tpl.replace("{q}", encodeURIComponent(q));
-      window.open(url, "_blank", "noopener,noreferrer");
-    });
-
-    tool.appendChild(wrap);
-  });
-})();
 })();
 </script>
 </body>
