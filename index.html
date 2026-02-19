@@ -827,40 +827,46 @@ li.tool{
   
 </main>
 <footer>
-The resources compiled on this page have not been verified for safety or authenticity. For informational and educational purposes only. Website creator does not have any affiliation or receive any endorsement from the referenced websites. This website is for personal educational and informational purposes only. Site owner is not responsible for any third party site behavior. By using this website, users accept all risk and responsibility of navigating to any third party links on this site. If any site owner wishes to have their webpage removed, please send an email listed on this sites DNS certificate. 
+The tools compiled on this page consist of general OSINT and Blue/Red Team Resources and have not been verified for safety or authenticity (except where indicated). Use all resources at own risk.
+This site was created as a hobby/side-project for educational and entertainment purposes only and is not intended for official or business use. 
+
+Resources Last Verified: 2/18/2026
+Site Last Updated: 2/18/2026
+Contact: fireview.me (at) gmail
 </footer>
 <script>
+/* Search Bar Function */
 (function(){
-  const q = document.getElementById('q');
+  const q = document.getElementById('q'); /*cache element DOM filters*/
   const tools = Array.from(document.querySelectorAll('.tool'));
-  const sections = Array.from(document.querySelectorAll('section'));
-  function apply(){
+  const sections = Array.from(document.querySelectorAll('section')); 
+  function apply(){ /*reads and converts user search into queriable element*/
     const term = (q.value || '').trim().toLowerCase();
     let visibleCount = 0;
-    tools.forEach(el=>{
+    tools.forEach(el=>{ /*query element look-up classes */
       const hay = el.getAttribute('data-title') || '';
       const show = term === '' || hay.includes(term);
       el.classList.toggle('hidden', !show);
       if(show) visibleCount++;
     });
-    sections.forEach(sec=>{
+    sections.forEach(sec=>{ /* hide sections with no results */
       const anyVisible = sec.querySelectorAll('.tool:not(.hidden)').length > 0;
       sec.classList.toggle('hidden', !anyVisible);
     });
   }
-  q.addEventListener('input', apply);
+  q.addEventListener('input', apply); /*update results as user types */
   window.addEventListener('keydown', (e)=>{
-    if(e.key === '/' && document.activeElement !== q){
+    if(e.key === '/' && document.activeElement !== q){ /*use / as a quick search hotkey*/
       e.preventDefault();
       q.focus();
     }
-    if(e.key === 'Escape' && document.activeElement === q){
+    if(e.key === 'Escape' && document.activeElement === q){ /*if esc is pressed, clear search & return to home*/
       q.value='';
       q.blur();
       apply();
     }
   });
-  apply();
+  apply(); /*apply consistent visible pages*/
 })();
 (function () {
   const MAX_LEN = 48; // keeps pills readable
