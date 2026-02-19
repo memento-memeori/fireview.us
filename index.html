@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <title>OSINT Tools Directory</title>
+
 <link href="/Fireview_Logo_Final.png" rel="icon" type="image/png"/>
 <link href="/Fireview_favicon_black.ico" rel="icon" type="image/x-icon"/>
 
@@ -28,6 +28,14 @@ header{
   background:rgba(0,0,0,.92);
   backdrop-filter: blur(8px);
   border-bottom:1px solid var(--line);
+
+  /*  smooth full-hide animation */
+  transition: transform 0.25s ease-in-out;
+  will-change: transform;
+}
+header.hide{
+  /*  full-hide state  */
+  transform: translateY(-100%);
 }
 .wrap{max-width:1100px;margin:0 auto;padding:14px 16px;}
 h1{margin:0;font-size:20px;font-weight:650;}
@@ -122,7 +130,7 @@ kbd{
 .badges{
   display:none !important;
 }
-  /* Alphabetical dropdown menu bar */
+/* Alphabetical dropdown menu bar */
 #alphaMenu{
   width:100%;
   padding:10px 12px;
@@ -205,49 +213,52 @@ li.tool{
 .header-inner{
   display:flex;
   flex-direction:column;   /* stack logo above search */
-  align-items:center;      
+  align-items:center;
   text-align:center;
   gap:10px;
 }
 
 /* Logo sizing */
 .site-logo{
-  width:240px;   
+  width:240px;
   height:auto;
   display:block;
   margin:0 auto;
 }
 </style>
 </head>
+
 <body>
 <header>
-<div class="wrap header-inner">
-<img alt="Site Logo" class="site-logo" src="Fireview_Logo_No_Background.png"/>
-<h1>Fireview Tool Directory</h1>
-<div class="controls">
-<input id="q" placeholder="Search (e.g., 'whois', 'abuse', 'breach', 'pdf')" type="search"/>
-<select aria-label="Open tool by name" id="alphaMenu">
-<option value="">Toolkit Lookup (A–Z)…</option>
-</select>
-<div class="badges" id="badges"><a class="badge" href="#search-and-discovery"><span>Search &amp; Discovery</span> <span class="count">(10)</span></a>
-<a class="badge" href="#osint-frameworks-and-collections"><span>OSINT Frameworks &amp; Collections</span> <span class="count">(6)</span></a>
-<a class="badge" href="#people-identity-and-contact-enrichment"><span>People, Identity &amp; Contact Enrichment</span> <span class="count">(8)</span></a>
-<a class="badge" href="#public-records-and-legal"><span>Public Records &amp; Legal</span> <span class="count">(11)</span></a>
-<a class="badge" href="#companies-entities-and-corporate-registries"><span>Companies, Entities &amp; Corporate Registries</span> <span class="count">(7)</span></a>
-<a class="badge" href="#government-and-standards"><span>Government &amp; Standards</span> <span class="count">(11)</span></a>
-<a class="badge" href="#network-ip-and-infrastructure"><span>Network, IP &amp; Infrastructure</span> <span class="count">(17)</span></a>
-<a class="badge" href="#web-dns-ssl-and-email-diagnostics"><span>Web, DNS, SSL &amp; Email Diagnostics</span> <span class="count">(7)</span></a>
-<a class="badge" href="#threat-intel-malware-and-sandboxes"><span>Threat Intel, Malware &amp; Sandboxes</span> <span class="count">(3)</span></a>
-<a class="badge" href="#leaks-breaches-and-exploits"><span>Leaks, Breaches &amp; Exploits</span> <span class="count">(9)</span></a>
-<a class="badge" href="#web-archives-and-caching"><span>Web Archives &amp; Caching</span> <span class="count">(10)</span></a>
-<a class="badge" href="#media-files-and-forensics"><span>Media, Files &amp; Forensics</span> <span class="count">(7)</span></a>
-<a class="badge" href="#utilities-decode-convert-and-generate"><span>Utilities: Decode, Convert &amp; Generate</span> <span class="count">(13)</span></a>
-<a class="badge" href="#finance-and-investing-reference"><span>Finance &amp; Investing Reference</span> <span class="count">(4)</span></a>
-<a class="badge" href="#monitoring-and-outages"><span>Monitoring &amp; Outages</span> <span class="count">(4)</span></a>
-<a class="badge" href="#link-tracking-and-ip-loggers-use-ethically"><span>Link Tracking &amp; IP Loggers (Use Ethically)</span> <span class="count">(2)</span></a>
-</div>
-</div>
-</div>
+  <div class="wrap header-inner">
+    <img alt="Site Logo" class="site-logo" src="Fireview_Logo_No_Background.png"/>
+    <h1>Fireview Tool Directory</h1>
+    <div class="controls">
+      <input id="q" placeholder="Search (e.g., 'whois', 'abuse', 'breach', 'pdf')" type="search"/>
+      <select aria-label="Open tool by name" id="alphaMenu">
+        <option value="">Toolkit Lookup (A–Z)…</option>
+      </select>
+
+      <div class="badges" id="badges">
+        <a class="badge" href="#search-and-discovery"><span>Search &amp; Discovery</span> <span class="count">(10)</span></a>
+        <a class="badge" href="#osint-frameworks-and-collections"><span>OSINT Frameworks &amp; Collections</span> <span class="count">(6)</span></a>
+        <a class="badge" href="#people-identity-and-contact-enrichment"><span>People, Identity &amp; Contact Enrichment</span> <span class="count">(8)</span></a>
+        <a class="badge" href="#public-records-and-legal"><span>Public Records &amp; Legal</span> <span class="count">(11)</span></a>
+        <a class="badge" href="#companies-entities-and-corporate-registries"><span>Companies, Entities &amp; Corporate Registries</span> <span class="count">(7)</span></a>
+        <a class="badge" href="#government-and-standards"><span>Government &amp; Standards</span> <span class="count">(11)</span></a>
+        <a class="badge" href="#network-ip-and-infrastructure"><span>Network, IP &amp; Infrastructure</span> <span class="count">(17)</span></a>
+        <a class="badge" href="#web-dns-ssl-and-email-diagnostics"><span>Web, DNS, SSL &amp; Email Diagnostics</span> <span class="count">(7)</span></a>
+        <a class="badge" href="#threat-intel-malware-and-sandboxes"><span>Threat Intel, Malware &amp; Sandboxes</span> <span class="count">(3)</span></a>
+        <a class="badge" href="#leaks-breaches-and-exploits"><span>Leaks, Breaches &amp; Exploits</span> <span class="count">(9)</span></a>
+        <a class="badge" href="#web-archives-and-caching"><span>Web Archives &amp; Caching</span> <span class="count">(10)</span></a>
+        <a class="badge" href="#media-files-and-forensics"><span>Media, Files &amp; Forensics</span> <span class="count">(7)</span></a>
+        <a class="badge" href="#utilities-decode-convert-and-generate"><span>Utilities: Decode, Convert &amp; Generate</span> <span class="count">(13)</span></a>
+        <a class="badge" href="#finance-and-investing-reference"><span>Finance &amp; Investing Reference</span> <span class="count">(4)</span></a>
+        <a class="badge" href="#monitoring-and-outages"><span>Monitoring &amp; Outages</span> <span class="count">(4)</span></a>
+        <a class="badge" href="#link-tracking-and-ip-loggers-use-ethically"><span>Link Tracking &amp; IP Loggers (Use Ethically)</span> <span class="count">(2)</span></a>
+      </div>
+    </div>
+  </div>
 </header>
 <main>
 <section data-category="Indexers &amp; Toolkits" id="search-and-discovery"><h2>Search &amp; Discovery</h2>
@@ -1189,6 +1200,31 @@ Contact: fireview.me (at) gmail
     window.open(url, '_blank', 'noopener,noreferrer');
     menu.value = '';
   });
+})();
+/*  header full-hide on scroll */
+(function(){
+  const header = document.querySelector('header');
+  if (!header) return;
+
+  let lastY = window.scrollY || 0;
+  const threshold = 10; // reduces jitter from tiny scroll changes
+
+  window.addEventListener('scroll', () => {
+    const y = window.scrollY || 0;
+
+    // Always show when at top
+    if (y <= 0) {
+      header.classList.remove('hide');
+      lastY = 0;
+      return;
+    }
+
+    // Down = hide, Up = show
+    if (y > lastY + threshold) header.classList.add('hide');
+    else if (y < lastY - threshold) header.classList.remove('hide');
+
+    lastY = y;
+  }, { passive: true });
 })();
 </script>
 </body>
