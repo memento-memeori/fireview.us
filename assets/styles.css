@@ -27,6 +27,30 @@ header.hide{
   /*  full-hide state  */
   transform: translateY(-100%);
 }
+.site-nav{
+  display:flex;
+  justify-content:center;
+  gap:12px;
+  margin-top:12px;
+}
+
+.nav-link{
+  padding:6px 12px;
+  border:1px solid var(--line);
+  border-radius:10px;
+  text-decoration:none;
+  color:var(--text);
+  font-size:12px;
+  transition:background .2s ease, border-color .2s ease;
+}
+
+.nav-link:hover{
+  border-color:var(--muted);
+}
+
+.nav-link.active{
+  background:rgba(138,120,183,.18);
+}
 .wrap{max-width:1100px;margin:0 auto;padding:14px 16px;}
 h1{margin:0;font-size:20px;font-weight:650;}
 .sub{margin-top:6px;color:var(--muted);font-size:13px;line-height:1.35;}
