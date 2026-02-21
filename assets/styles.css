@@ -228,8 +228,18 @@ li.tool{
 .btn:hover{border-color:var(--muted);}
 .btn.ghost{background:rgba(138,120,183,.10);}
 .btn.danger{border-color:#c77; color:#f3c;}
-.top-actions{display:flex; gap:8px; justify-content:center; flex-wrap:wrap;}
-
+.top-actions{display:flex; gap:8px; justify-content:center; flex-wrap:wrap;
+}
+/* Favorites toggle active state (top button) */
+.btn.on{
+  background:#d4af37;        /* gold */
+  border-color:#d4af37;
+  color:#000;
+}
+.btn.on:hover{
+  background:#e6c55c;
+  border-color:#e6c55c;
+}
 /* Star + tool actions */
 .tool-actions{
   display:flex;
