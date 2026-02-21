@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none';"/>
+<title>Fireview API Directory</title>
+
+<link href="images/Fireview_Logo_Final.png" rel="icon" type="image/png"/>
+<link href="images/Fireview_favicon_black.ico" rel="icon" type="image/x-icon"/>
+<link rel="stylesheet" href="assets/styles.css"/>
+</head>
+
+<body>
+<header>
+  <div class="wrap header-inner">
+    <img class="site-logo" src="images/Fireview_Logo_No_Background.png" alt="Site Logo">
+    <h1>Fireview API Directory</h1>
+
+    <div class="controls">
+      <input id="q" aria-label="Search APIs" placeholder="Search APIs (e.g., 'whois', 'ip', 'enrich', 'json')" type="search"/>
+      <select aria-label="Open API tool by name" id="alphaMenu">
+        <option value="">API Lookup (A–Z)…</option>
+      </select>
+
+      <div class="top-actions" id="topActions">
+        <button class="btn ghost" id="btnFavToggle" title="Show favorites only (f)">★ Favorites</button>
+        <button class="btn ghost" id="btnNotes" title="Open notes (n)">Notes</button>
+        <button class="btn ghost" id="btnEditor" title="Open editor (e)">Editor</button>
+      </div>
+
+      <!-- API category labels -->
+      <div class="badges" id="badges">
+        <a class="badge" href="#custom-built-apis"><span>Custom Built APIs</span> <span class="count">(1)</span></a>
+        <a class="badge" href="#third-party-apis"><span>3rd Party APIs</span> <span class="count">(0)</span></a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <div id="resultsBar" class="results" aria-live="polite"></div>
+  <div id="emptyState" class="empty hidden">No results. Try fewer or more generic keywords.</div>
+
+  <!-- Custom Built APIs -->
+  <section id="custom-built-apis" data-category="Custom Built APIs">
+    <h2>Custom Built APIs</h2>
+    <div class="note">Your own tools and internal utilities (hosted under your domain or GitHub Pages).</div>
+    <ul>
+
+      <li class="tool" data-title="Fireview HTML → tools.json Converter | convert directory HTML into tools.json (no node) | json | parser | export">
+        <div class="link">Fireview HTML → tools.json Converter</div>
+        <div class="meta">
+          <!-- Replace href with the public URL where you host convert_to_json.html -->
+          <a class="url-link" href="convert_to_json.html" rel="noopener noreferrer" target="_blank">convert_to_json.html</a>
+          <span class="pill"></span>
+        </div>
+      </li>
+
+    </ul>
+  </section>
+
+  <!-- 3rd Party APIs -->
+  <section id="third-party-apis" data-category="3rd Party APIs">
+    <h2>3rd Party APIs</h2>
+    <div class="note">External API providers and documentation portals (rate limits, keys, and ToS apply).</div>
+    <ul>
+      <!-- Add new API tools here as <li class="tool"> ... -->
+    </ul>
+  </section>
+
+</main>
+
+<footer>
+The tools compiled on this page include custom and third-party APIs and have not been verified for safety or authenticity (except where indicated). Use at your own risk.
+Resources Last Verified: 2/21/2026
+Site Last Updated: 2/21/2026
+Contact: fireview.me (at) gmail
+</footer>
+
+<!-- NOTES PANEL -->
+<div class="drawer hidden" id="notesDrawer" aria-hidden="true">
+  <div class="drawer-head">
+    <div class="drawer-title">Notes</div>
+    <button class="btn" id="btnNotesClose">Close</button>
+  </div>
+
+  <div class="drawer-body">
+    <label class="label">Global notes</label>
+    <textarea id="globalNotes" class="ta" placeholder="General notes..."></textarea>
+
+    <div class="divider"></div>
+
+    <label class="label">Favorite tools</label>
+    <div id="favList" class="list"></div>
+  </div>
+</div>
+
+<!-- EDITOR PANEL -->
+<div class="drawer hidden" id="editorDrawer" aria-hidden="true">
+  <div class="drawer-head">
+    <div class="drawer-title">Editor</div>
+    <button class="btn" id="btnEditorClose">Close</button>
+  </div>
+
+  <div class="drawer-body">
+    <div class="note">
+      Format: one tool per line as <b>Category | Name | URL | Description</b>.
+      Category must match an existing section heading (e.g. “Custom Built APIs”).
+      Description becomes <code>data-title</code> (used by search + pill text).
+    </div>
+
+    <textarea id="editorText" class="ta" spellcheck="false"
+      placeholder="Custom Built APIs | Example API Tool | https://example.com | api documentation / endpoint notes"></textarea>
+
+    <div class="row">
+      <button class="btn" id="btnLoadCurrent">Load current</button>
+      <button class="btn" id="btnLoadSaved">Load saved override</button>
+      <button class="btn" id="btnSaveOverride">Save override</button>
+      <button class="btn" id="btnApplyOverride">Apply override</button>
+      <button class="btn danger" id="btnClearOverride">Clear override</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOOL NOTE MODAL -->
+<div class="modal hidden" id="toolNoteModal" aria-hidden="true">
+  <div class="modal-card">
+    <div class="modal-head">
+      <div class="modal-title" id="toolNoteTitle">Tool note</div>
+      <button class="btn" id="btnToolNoteClose">Close</button>
+    </div>
+    <textarea id="toolNoteText" class="ta" placeholder="Notes for this tool..."></textarea>
+    <div class="row">
+      <button class="btn" id="btnToolNoteSave">Save note</button>
+      <button class="btn danger" id="btnToolNoteDelete">Delete note</button>
+    </div>
+  </div>
+</div>
+
+<script src="assets/app.js" defer></script>
+</body>
+</html>
