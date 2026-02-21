@@ -239,11 +239,18 @@
       }
 
       let visibleSections = 0;
-      for (const sec of sections()) {
-        const anyVisible = sec.querySelectorAll('.tool:not(.hidden)').length > 0;
-        sec.classList.toggle('hidden', !anyVisible);
-        if (anyVisible) visibleSections++;
-      }
+     for (const sec of sections()) {
+  // Do not hide sections that aren't tool lists (e.g., embedded converter panels)
+  const hasAnyTools = sec.querySelectorAll('li.tool').length > 0;
+  if (!hasAnyTools) {
+    sec.classList.remove('hidden');
+    continue;
+  }
+
+  const anyVisible = sec.querySelectorAll('.tool:not(.hidden)').length > 0;
+  sec.classList.toggle('hidden', !anyVisible);
+  if (anyVisible) visibleSections++;
+}
 
       updateResultsUI(visibleCount, visibleSections);
     }
