@@ -410,3 +410,70 @@ section{
   content-visibility:auto;
   contain-intrinsic-size: 400px;
 }
+/* Universal Script Converter panel */
+.mini-title{
+  margin:6px 0 10px;
+  font-size:14px;
+  color:var(--muted);
+  font-weight:650;
+}
+
+#universalConverter .note{
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.45;
+  margin:0 0 10px;
+}
+
+.dropzone{
+  position:relative;
+  border:1px dashed var(--line);
+  border-radius:14px;
+  padding:12px;
+  text-align:center;
+  color:var(--muted);
+  background:rgba(255,255,255,.02);
+  cursor:pointer;
+  margin:10px 0 12px;
+}
+.dropzone:hover{border-color:var(--muted);}
+.dropzone.dragover{
+  border-color:var(--muted);
+  background:rgba(159,183,227,.08);
+}
+.dropzone input[type="file"]{
+  position:absolute;
+  inset:0;
+  opacity:0;
+  cursor:pointer;
+}
+
+.schema{
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:10px 12px;
+  background:rgba(0,0,0,.25);
+}
+.schema summary{cursor:pointer; color:var(--text); font-weight:650;}
+.schema-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(210px, 1fr));
+  gap:10px;
+  margin-top:10px;
+}
+.mini-in{
+  width:100%;
+  padding:8px 10px;
+  border:1px solid var(--line);
+  border-radius:10px;
+  background:var(--bg);
+  color:var(--text);
+  outline:none;
+  font-size:12px;
+}
+
+#universalConverter .stat{
+  margin:10px 0 0;
+  color:var(--muted);
+  font-size:12px;
+}
