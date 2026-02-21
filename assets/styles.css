@@ -231,7 +231,7 @@ li.tool{
 .top-actions{display:flex; gap:8px; justify-content:center; flex-wrap:wrap;
 }
 /* Favorites toggle active state (top button) */
-.btn.on{
+button.btn.on{
   background:#d4af37;        /* gold */
   border-color:#d4af37;
   color:#000;
