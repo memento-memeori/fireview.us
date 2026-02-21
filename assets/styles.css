@@ -257,7 +257,11 @@ button.btn.on{
   font-size:12px;
   line-height:1;
 }
-.star.on{background:rgba(138,120,183,.18);}
+.star.on{
+  background:#d4af37; /*gold star - fave tools */
+  border-color:#d4af37;
+  color:#000;
+}
 .mini{
   border:1px solid var(--line);
   border-radius:10px;
