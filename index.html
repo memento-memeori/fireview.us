@@ -225,6 +225,119 @@ li.tool{
   display:block;
   margin:0 auto;
 }
+/* Buttons */
+.btn{
+  padding:8px 10px;
+  border:1px solid var(--line);
+  border-radius:10px;
+  background:transparent;
+  color:var(--text);
+  cursor:pointer;
+  font-size:12px;
+}
+.btn:hover{border-color:var(--muted);}
+.btn.ghost{background:rgba(138,120,183,.10);}
+.btn.danger{border-color:#c77; color:#f3c;}
+.top-actions{display:flex; gap:8px; justify-content:center; flex-wrap:wrap;}
+
+/* Star + tool actions */
+.tool-actions{
+  display:flex;
+  gap:8px;
+  justify-content:center;
+  align-items:center;
+  margin-top:8px;
+}
+.star{
+  border:1px solid var(--line);
+  border-radius:10px;
+  padding:4px 8px;
+  cursor:pointer;
+  user-select:none;
+  font-size:12px;
+  line-height:1;
+}
+.star.on{background:rgba(138,120,183,.18);}
+.mini{
+  border:1px solid var(--line);
+  border-radius:10px;
+  padding:4px 8px;
+  font-size:12px;
+  cursor:pointer;
+}
+
+/* Drawer panels */
+.drawer{
+  position:fixed;
+  top:0; right:0;
+  width:min(520px, 92vw);
+  height:100%;
+  background:rgba(0,0,0,.96);
+  border-left:1px solid var(--line);
+  z-index:50;
+  display:flex;
+  flex-direction:column;
+}
+.drawer-head{
+  padding:12px 12px;
+  border-bottom:1px solid var(--line);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+}
+.drawer-title{font-weight:650;}
+.drawer-body{padding:12px; overflow:auto;}
+.label{display:block; margin:6px 0; color:var(--muted); font-size:12px;}
+.ta{
+  width:100%;
+  min-height:140px;
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:var(--bg);
+  color:var(--text);
+  padding:10px;
+  outline:none;
+  font-size:12px;
+  line-height:1.35;
+}
+.row{display:flex; gap:8px; flex-wrap:wrap; margin-top:10px;}
+.divider{height:1px; background:rgba(138,120,183,.35); margin:14px 0;}
+.list{display:flex; flex-direction:column; gap:8px;}
+.list a{
+  color:var(--muted);
+  text-decoration:none;
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:8px 10px;
+}
+.list a:hover{color:var(--text); border-color:var(--muted);}
+
+/* Modal */
+.modal{
+  position:fixed; inset:0;
+  background:rgba(0,0,0,.65);
+  z-index:60;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:14px;
+}
+.modal-card{
+  width:min(720px, 96vw);
+  background:rgba(0,0,0,.96);
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:12px;
+}
+.modal-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:10px;
+}
+.modal-title{font-weight:650;}
 </style>
 </head>
 
@@ -238,6 +351,12 @@ li.tool{
       <select aria-label="Open tool by name" id="alphaMenu">
         <option value="">Toolkit Lookup (A–Z)…</option>
       </select>
+
+      <div class="top-actions" id="topActions">
+  <button class="btn ghost" id="btnFavToggle" title="Show favorites only (f)">★ Favorites</button>
+  <button class="btn ghost" id="btnNotes" title="Open notes (n)">Notes</button>
+  <button class="btn ghost" id="btnEditor" title="Open editor (e)">Editor</button>
+</div>
 
       <div class="badges" id="badges">
         <a class="badge" href="#search-and-discovery"><span>Search &amp; Discovery</span> <span class="count">(10)</span></a>
@@ -1085,10 +1204,69 @@ li.tool{
 The tools compiled on this page consist of general OSINT and Blue/Red Team Resources and have not been verified for safety or authenticity (except where indicated). Use all resources at own risk.
 This site was created as a hobby/side-project for educational and entertainment purposes only and is not intended for official or business use. 
 
-Resources Last Verified: 2/18/2026
+Resources Last Verified: 2/21/2026
 Site Last Updated: 2/18/2026
 Contact: fireview.me (at) gmail 
 </footer>
+<!-- NOTES PANEL --> 
+<div class="drawer hidden" id="notesDrawer" aria-hidden="true">
+  <div class="drawer-head">
+    <div class="drawer-title">Notes</div>
+    <button class="btn" id="btnNotesClose">Close</button>
+  </div>
+
+  <div class="drawer-body">
+    <label class="label">Global notes</label>
+    <textarea id="globalNotes" class="ta" placeholder="General notes..."></textarea>
+
+    <div class="divider"></div>
+
+    <label class="label">Favorite tools</label>
+    <div id="favList" class="list"></div>
+  </div>
+</div>
+
+<!-- EDITOR PANEL -->
+<div class="drawer hidden" id="editorDrawer" aria-hidden="true">
+  <div class="drawer-head">
+    <div class="drawer-title">Editor</div>
+    <button class="btn" id="btnEditorClose">Close</button>
+  </div>
+
+  <div class="drawer-body">
+    <div class="note">
+      Format: one tool per line as <b>Category | Name | URL | Description</b>.
+      Category must match an existing section heading (e.g. “Search &amp; Discovery”).
+      Description becomes <code>data-title</code> (used by search + pill text).
+    </div>
+
+    <textarea id="editorText" class="ta" spellcheck="false"
+      placeholder="Search &amp; Discovery | Example Tool | https://example.com | example tool description"></textarea>
+
+    <div class="row">
+      <button class="btn" id="btnLoadCurrent">Load current</button>
+      <button class="btn" id="btnLoadSaved">Load saved override</button>
+      <button class="btn" id="btnSaveOverride">Save override</button>
+      <button class="btn" id="btnApplyOverride">Apply override</button>
+      <button class="btn danger" id="btnClearOverride">Clear override</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOOL NOTE MODAL -->
+<div class="modal hidden" id="toolNoteModal" aria-hidden="true">
+  <div class="modal-card">
+    <div class="modal-head">
+      <div class="modal-title" id="toolNoteTitle">Tool note</div>
+      <button class="btn" id="btnToolNoteClose">Close</button>
+    </div>
+    <textarea id="toolNoteText" class="ta" placeholder="Notes for this tool..."></textarea>
+    <div class="row">
+      <button class="btn" id="btnToolNoteSave">Save note</button>
+      <button class="btn danger" id="btnToolNoteDelete">Delete note</button>
+    </div>
+  </div>
+</div>
 <script>
 /* Search Bar Function */
 (function(){
@@ -1225,6 +1403,394 @@ Contact: fireview.me (at) gmail
 
     lastY = y;
   }, { passive: true });
+})();
+/* ===== Favorites + Notes + Editor (localStorage) ===== */
+(function(){
+  const LS_FAV = 'fireview:favorites:v1';
+  const LS_TOOL_NOTES = 'fireview:toolNotes:v1';
+  const LS_GLOBAL_NOTES = 'fireview:globalNotes:v1';
+  const LS_OVERRIDE = 'fireview:overrideLines:v1';
+
+  const q = document.getElementById('q');
+  const tools = () => Array.from(document.querySelectorAll('li.tool'));
+  const sections = () => Array.from(document.querySelectorAll('section'));
+
+  const readJSON = (k, fallback) => {
+    try { return JSON.parse(localStorage.getItem(k) || '') ?? fallback; }
+    catch { return fallback; }
+  };
+  const writeJSON = (k, v) => localStorage.setItem(k, JSON.stringify(v));
+
+  const toolKey = (toolEl) => {
+    const name = (toolEl.querySelector('.link')?.textContent || '').trim();
+    const url = toolEl.querySelector('.url-link')?.getAttribute('href') || '';
+    return `${name}||${url}`.toLowerCase();
+  };
+
+  /* ----- inject per-tool action buttons (star + note) ----- */
+  function injectToolActions(){
+    tools().forEach(t => {
+      if (t.querySelector('.tool-actions')) return;
+
+      const actions = document.createElement('div');
+      actions.className = 'tool-actions';
+
+      const star = document.createElement('div');
+      star.className = 'star';
+      star.textContent = '★';
+
+      const noteBtn = document.createElement('button');
+      noteBtn.className = 'mini';
+      noteBtn.type = 'button';
+      noteBtn.textContent = 'Note';
+
+      actions.appendChild(star);
+      actions.appendChild(noteBtn);
+
+      // append under .meta
+      const meta = t.querySelector('.meta');
+      if (meta) meta.appendChild(actions);
+      else t.appendChild(actions);
+
+      star.addEventListener('click', () => toggleFavorite(t));
+      noteBtn.addEventListener('click', () => openToolNote(t));
+    });
+  }
+
+  /* ----- favorites state ----- */
+  let favOnly = false;
+
+  function getFavSet(){
+    return new Set(readJSON(LS_FAV, []));
+  }
+  function setFavSet(set){
+    writeJSON(LS_FAV, Array.from(set));
+  }
+
+  function renderFavStars(){
+    const favs = getFavSet();
+    tools().forEach(t => {
+      const star = t.querySelector('.star');
+      if (!star) return;
+      const on = favs.has(toolKey(t));
+      star.classList.toggle('on', on);
+      star.title = on ? 'Unfavorite' : 'Favorite';
+    });
+  }
+
+  function toggleFavorite(toolEl){
+    const favs = getFavSet();
+    const k = toolKey(toolEl);
+    if (favs.has(k)) favs.delete(k);
+    else favs.add(k);
+    setFavSet(favs);
+    renderFavStars();
+    renderFavList();
+    applyFilters(); // respects favOnly
+  }
+
+  function applyFilters(){
+    const term = (q?.value || '').trim().toLowerCase();
+    const favs = getFavSet();
+
+    tools().forEach(el => {
+      const hay = (el.getAttribute('data-title') || '').toLowerCase();
+      const matchesTerm = term === '' || hay.includes(term);
+      const matchesFav = !favOnly || favs.has(toolKey(el));
+      const show = matchesTerm && matchesFav;
+      el.classList.toggle('hidden', !show);
+    });
+
+    sections().forEach(sec => {
+      const anyVisible = sec.querySelectorAll('.tool:not(.hidden)').length > 0;
+      sec.classList.toggle('hidden', !anyVisible);
+    });
+  }
+
+  /* ----- Notes drawer ----- */
+  const notesDrawer = document.getElementById('notesDrawer');
+  const btnNotes = document.getElementById('btnNotes');
+  const btnNotesClose = document.getElementById('btnNotesClose');
+  const globalNotes = document.getElementById('globalNotes');
+  const favList = document.getElementById('favList');
+
+  function openDrawer(drawer){
+    drawer?.classList.remove('hidden');
+    drawer?.setAttribute('aria-hidden', 'false');
+  }
+  function closeDrawer(drawer){
+    drawer?.classList.add('hidden');
+    drawer?.setAttribute('aria-hidden', 'true');
+  }
+
+  function renderGlobalNotes(){
+    if (!globalNotes) return;
+    globalNotes.value = localStorage.getItem(LS_GLOBAL_NOTES) || '';
+  }
+
+  function renderFavList(){
+    if (!favList) return;
+    favList.innerHTML = '';
+
+    const favs = getFavSet();
+    const favTools = tools()
+      .map(t => ({
+        el: t,
+        key: toolKey(t),
+        name: (t.querySelector('.link')?.textContent || '').trim(),
+        url: t.querySelector('.url-link')?.getAttribute('href') || ''
+      }))
+      .filter(x => x.url && favs.has(x.key))
+      .sort((a,b) => a.name.localeCompare(b.name, undefined, {sensitivity:'base'}));
+
+    if (favTools.length === 0){
+      const d = document.createElement('div');
+      d.className = 'note';
+      d.textContent = 'No favorites yet.';
+      favList.appendChild(d);
+      return;
+    }
+
+    favTools.forEach(x => {
+      const a = document.createElement('a');
+      a.href = x.url;
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
+      a.textContent = x.name;
+      favList.appendChild(a);
+    });
+  }
+
+  btnNotes?.addEventListener('click', () => {
+    renderGlobalNotes();
+    renderFavList();
+    openDrawer(notesDrawer);
+  });
+  btnNotesClose?.addEventListener('click', () => closeDrawer(notesDrawer));
+
+  globalNotes?.addEventListener('input', () => {
+    localStorage.setItem(LS_GLOBAL_NOTES, globalNotes.value || '');
+  });
+
+  /* ----- Tool note modal ----- */
+  const toolNoteModal = document.getElementById('toolNoteModal');
+  const toolNoteTitle = document.getElementById('toolNoteTitle');
+  const toolNoteText = document.getElementById('toolNoteText');
+  const btnToolNoteClose = document.getElementById('btnToolNoteClose');
+  const btnToolNoteSave = document.getElementById('btnToolNoteSave');
+  const btnToolNoteDelete = document.getElementById('btnToolNoteDelete');
+
+  let activeToolKey = null;
+
+  function openToolNote(toolEl){
+    const name = (toolEl.querySelector('.link')?.textContent || '').trim();
+    const url = toolEl.querySelector('.url-link')?.getAttribute('href') || '';
+    activeToolKey = toolKey(toolEl);
+
+    const notes = readJSON(LS_TOOL_NOTES, {});
+    toolNoteTitle.textContent = name || 'Tool note';
+    toolNoteText.value = notes[activeToolKey] || '';
+
+    toolNoteModal.classList.remove('hidden');
+    toolNoteModal.setAttribute('aria-hidden', 'false');
+
+    // convenience: show URL in title if no name
+    if (!name && url) toolNoteTitle.textContent = url;
+  }
+
+  function closeToolNote(){
+    toolNoteModal.classList.add('hidden');
+    toolNoteModal.setAttribute('aria-hidden', 'true');
+    activeToolKey = null;
+  }
+
+  btnToolNoteClose?.addEventListener('click', closeToolNote);
+  toolNoteModal?.addEventListener('click', (e) => {
+    if (e.target === toolNoteModal) closeToolNote();
+  });
+
+  btnToolNoteSave?.addEventListener('click', () => {
+    if (!activeToolKey) return;
+    const notes = readJSON(LS_TOOL_NOTES, {});
+    const v = (toolNoteText.value || '').trim();
+    if (v) notes[activeToolKey] = v;
+    else delete notes[activeToolKey];
+    writeJSON(LS_TOOL_NOTES, notes);
+    closeToolNote();
+  });
+
+  btnToolNoteDelete?.addEventListener('click', () => {
+    if (!activeToolKey) return;
+    const notes = readJSON(LS_TOOL_NOTES, {});
+    delete notes[activeToolKey];
+    writeJSON(LS_TOOL_NOTES, notes);
+    toolNoteText.value = '';
+    closeToolNote();
+  });
+
+  /* ----- Favorites toggle button ----- */
+  const btnFavToggle = document.getElementById('btnFavToggle');
+  btnFavToggle?.addEventListener('click', () => {
+    favOnly = !favOnly;
+    btnFavToggle.classList.toggle('ghost', !favOnly);
+    btnFavToggle.classList.toggle('on', favOnly);
+    btnFavToggle.textContent = favOnly ? '★ Favorites (on)' : '★ Favorites';
+    applyFilters();
+  });
+
+  /* ----- Editor drawer (override lines) ----- */
+  const editorDrawer = document.getElementById('editorDrawer');
+  const btnEditor = document.getElementById('btnEditor');
+  const btnEditorClose = document.getElementById('btnEditorClose');
+  const editorText = document.getElementById('editorText');
+  const btnLoadCurrent = document.getElementById('btnLoadCurrent');
+  const btnLoadSaved = document.getElementById('btnLoadSaved');
+  const btnSaveOverride = document.getElementById('btnSaveOverride');
+  const btnApplyOverride = document.getElementById('btnApplyOverride');
+  const btnClearOverride = document.getElementById('btnClearOverride');
+
+  function currentLines(){
+    // Derive lines from DOM: Category | Name | URL | data-title
+    const lines = [];
+    sections().forEach(sec => {
+      const cat = (sec.querySelector('h2')?.textContent || '').trim();
+      sec.querySelectorAll('li.tool').forEach(t => {
+        const name = (t.querySelector('.link')?.textContent || '').trim();
+        const url = t.querySelector('.url-link')?.getAttribute('href') || '';
+        const desc = (t.getAttribute('data-title') || '').trim();
+        if (cat && name && url) lines.push(`${cat} | ${name} | ${url} | ${desc}`);
+      });
+    });
+    return lines.join('\n');
+  }
+
+  function parseLines(raw){
+    return (raw || '')
+      .split('\n')
+      .map(x => x.trim())
+      .filter(Boolean)
+      .map(line => {
+        const parts = line.split('|').map(p => p.trim());
+        const [cat, name, url, desc] = parts;
+        return { cat, name, url, desc: desc || '' };
+      })
+      .filter(x => x.cat && x.name && x.url);
+  }
+
+  function applyOverride(raw){
+    const rows = parseLines(raw);
+    if (rows.length === 0) return;
+
+    // map category heading text -> section element
+    const secMap = new Map();
+    sections().forEach(sec => {
+      const h = (sec.querySelector('h2')?.textContent || '').trim();
+      if (h) secMap.set(h.toLowerCase(), sec);
+    });
+
+    // wipe all ULs
+    sections().forEach(sec => {
+      const ul = sec.querySelector('ul');
+      if (ul) ul.innerHTML = '';
+    });
+
+    // helper: create tool li matching your existing structure
+    function mkToolLi({name, url, desc}){
+      const li = document.createElement('li');
+      li.className = 'tool';
+      li.setAttribute('data-title', desc || `${name} ${url}`);
+
+      const link = document.createElement('div');
+      link.className = 'link';
+      link.textContent = name;
+
+      const meta = document.createElement('div');
+      meta.className = 'meta';
+
+      const a = document.createElement('a');
+      a.className = 'url-link';
+      a.href = url;
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
+      a.textContent = url;
+
+      const pill = document.createElement('span');
+      pill.className = 'pill';
+
+      meta.appendChild(a);
+      meta.appendChild(pill);
+
+      li.appendChild(link);
+      li.appendChild(meta);
+
+      return li;
+    }
+
+    rows.forEach(r => {
+      const sec = secMap.get(r.cat.toLowerCase());
+      if (!sec) return;
+      const ul = sec.querySelector('ul');
+      if (!ul) return;
+      ul.appendChild(mkToolLi(r));
+    });
+
+    // re-run existing helpers that rely on .tool elements
+    injectToolActions();
+    // rebuild pill text
+    (function(){
+      const MAX_LEN = 48;
+      document.querySelectorAll('.tool').forEach(tool => {
+        const title = tool.getAttribute('data-title') || '';
+        const pill = tool.querySelector('.pill');
+        if (!pill) return;
+
+        let desc = title
+          .replace(/\s+https?:\/\/\S+/gi, '')
+          .replace(/\s{2,}/g, ' ')
+          .trim();
+        desc = desc.charAt(0).toUpperCase() + desc.slice(1);
+        if (desc.length > MAX_LEN) desc = desc.slice(0, MAX_LEN - 1) + '…';
+        pill.textContent = desc || 'Reference tool';
+      });
+    })();
+
+    // rebuild alpha menu
+    if (typeof buildAlphaMenu === 'function') buildAlphaMenu();
+
+    renderFavStars();
+    applyFilters();
+  }
+
+  btnEditor?.addEventListener('click', () => openDrawer(editorDrawer));
+  btnEditorClose?.addEventListener('click', () => closeDrawer(editorDrawer));
+
+  btnLoadCurrent?.addEventListener('click', () => { editorText.value = currentLines(); });
+  btnLoadSaved?.addEventListener('click', () => { editorText.value = localStorage.getItem(LS_OVERRIDE) || ''; });
+  btnSaveOverride?.addEventListener('click', () => { localStorage.setItem(LS_OVERRIDE, editorText.value || ''); });
+  btnApplyOverride?.addEventListener('click', () => applyOverride(editorText.value || ''));
+  btnClearOverride?.addEventListener('click', () => { localStorage.removeItem(LS_OVERRIDE); });
+
+  /* ----- hotkeys ----- */
+  window.addEventListener('keydown', (e) => {
+    // do not interfere with typing in textarea
+    const tag = (document.activeElement?.tagName || '').toLowerCase();
+    if (tag === 'textarea') return;
+
+    if (e.key === 'f') { e.preventDefault(); btnFavToggle?.click(); }
+    if (e.key === 'n') { e.preventDefault(); btnNotes?.click(); }
+    if (e.key === 'e') { e.preventDefault(); btnEditor?.click(); }
+  });
+
+  /* Init */
+  injectToolActions();
+  renderFavStars();
+  applyFilters();
+
+  // auto-load saved override if present (optional)
+  const saved = localStorage.getItem(LS_OVERRIDE);
+  if (saved && saved.trim().length > 0) {
+    applyOverride(saved);
+  }
 })();
 </script>
 </body>
