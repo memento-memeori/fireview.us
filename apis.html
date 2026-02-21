@@ -46,42 +46,68 @@
   <div id="emptyState" class="empty hidden">No results. Try fewer or more generic keywords.</div>
 
   <!-- Custom Built APIs -->
-  <section id="custom-built-apis" data-category="Custom Built APIs">
-<section class="panel" id="jsonConverter">
-  <h2>Universal HTML / Text → JSON Converter</h2>
+<section id="custom-built-apis">
+  <h2>Custom Built API's</h2>
 
-  <p class="note">
-    Paste HTML, a URL list, or structured lines (Name | URL | Description | Category).
-    Conversion happens locally in your browser.
-  </p>
+  <!-- JSON Converter -->
+  <h3 class="mini-title">Universal Script Converter</h3>
 
-  <textarea id="convInput" placeholder="Paste HTML or text here..."></textarea>
+  <div class="panel" id="universalConverter">
+    <p class="note">
+      Paste HTML, XML, JSON, a URL list, or structured lines (<code>Name | URL | Description | Category</code>).
+      Runs locally in your browser.
+    </p>
 
-  <div class="row">
-    <select id="convMode">
-      <option value="auto">Auto Detect</option>
-      <option value="html">HTML Anchor Parse</option>
-      <option value="urls">Plain URL List</option>
-      <option value="pipes">Pipe Format (Name | URL | Desc | Cat)</option>
-    </select>
+    <div class="dropzone" id="convDrop" role="button" tabindex="0" aria-label="Drop a file here or click to upload">
+      Drop a file here (HTML/XML/JSON/TXT) or click to upload
+      <input id="convFile" type="file" accept=".html,.htm,.xml,.json,.txt,text/html,application/xml,application/json,text/plain" />
+    </div>
 
-    <select id="convOutput">
-      <option value="array">Array of Objects</option>
-      <option value="keyed">Keyed by URL</option>
-      <option value="minimal">URL Only</option>
-    </select>
+    <label class="label" for="convInput">Input</label>
+    <textarea id="convInput" class="ta" placeholder="Paste HTML / XML / JSON / text here..." spellcheck="false"></textarea>
 
-    <button id="convRun">Convert</button>
-    <button id="convCopy">Copy</button>
-    <button id="convDownload">Download</button>
-    <button id="convClear">Clear</button>
+    <div class="row">
+      <select id="convMode" class="btn" aria-label="Parse mode">
+        <option value="auto">Auto detect</option>
+        <option value="html">HTML anchors (&lt;a href&gt;)</option>
+        <option value="urls">URL list</option>
+        <option value="pipes">Pipe lines (Name | URL | Desc | Cat)</option>
+        <option value="xml">XML → JSON</option>
+        <option value="json">JSON validate / pretty</option>
+      </select>
+
+      <select id="convOutMode" class="btn" aria-label="Output format">
+        <option value="array">JSON: array of objects</option>
+        <option value="keyed">JSON: keyed by url</option>
+        <option value="minimal">JSON: url only</option>
+      </select>
+
+      <button class="btn ghost" id="convRun" type="button">Convert</button>
+      <button class="btn" id="convCopy" type="button">Copy</button>
+      <button class="btn" id="convDownloadJson" type="button">Download JSON</button>
+      <button class="btn" id="convDownloadCsv" type="button">Download CSV</button>
+      <button class="btn danger" id="convClear" type="button">Clear</button>
+    </div>
+
+    <div class="divider"></div>
+
+    <details class="schema">
+      <summary>Schema builder (rename output fields)</summary>
+      <div class="schema-grid">
+        <label class="label">Name field <input id="mapName" class="mini-in" value="name" /></label>
+        <label class="label">URL field <input id="mapUrl" class="mini-in" value="url" /></label>
+        <label class="label">Description field <input id="mapDesc" class="mini-in" value="description" /></label>
+        <label class="label">Category field <input id="mapCat" class="mini-in" value="category" /></label>
+      </div>
+      <p class="note">If you change these, output JSON/CSV will use your field names.</p>
+    </details>
+
+    <div class="stat" id="convStats">Waiting for input…</div>
+
+    <label class="label" for="convOut">Output</label>
+    <textarea id="convOut" class="ta" readonly placeholder="Converted JSON will appear here…"></textarea>
   </div>
-
-  <textarea id="convOutputBox" readonly placeholder="JSON output..."></textarea>
 </section>
-
-    </ul>
-  </section>
 
   <!-- 3rd Party APIs -->
   <section id="third-party-apis" data-category="3rd Party APIs">
@@ -160,9 +186,7 @@ Contact: fireview.me (at) gmail
     </div>
   </div>
 </div>
-
+  
 <script src="assets/app.js" defer></script>
 </body>
-
 </html>
-
