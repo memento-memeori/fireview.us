@@ -265,8 +265,9 @@
 
     let activeToolKey = '';
 
-    function openDrawer(drawer) { drawer?.classList.add('open'); }
-    function closeDrawer(drawer) { drawer?.classList.remove('open'); }
+    // CSS uses .hidden { display:none }. Use that for showing/hiding.
+    function openDrawer(drawer) { drawer?.classList.remove('hidden'); }
+    function closeDrawer(drawer) { drawer?.classList.add('hidden'); }
 
     btnNotes?.addEventListener('click', () => openDrawer(notesDrawer));
     btnNotesClose?.addEventListener('click', () => closeDrawer(notesDrawer));
@@ -288,11 +289,11 @@
 
       const notes = readJSON(CFG.LS_TOOL_NOTES, {});
       if (toolNoteText) toolNoteText.value = (notes[k] || '');
-      toolNoteModal?.classList.add('open');
+      toolNoteModal?.classList.remove('hidden');
     }
 
     function closeToolNote() {
-      toolNoteModal?.classList.remove('open');
+      toolNoteModal?.classList.add('hidden');
       activeToolKey = '';
     }
 
