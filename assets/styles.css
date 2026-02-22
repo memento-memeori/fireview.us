@@ -293,7 +293,34 @@ button.btn.on{
   font-size:12px;
   cursor:pointer;
 }
+/* Container created by JS is .actions (not .tool-actions) */
+.actions{
+  display:flex;
+  gap:8px;
+  justify-content:center;
+  align-items:center;
+  margin:8px 0 0;
+}
 
+/* Star button created by JS is button.icon-btn.star */
+.icon-btn{
+  border:1px solid var(--line);
+  border-radius:10px;
+  padding:4px 8px;
+  background:transparent;
+  color:var(--text);
+  cursor:pointer;
+  user-select:none;
+  font-size:12px;
+  line-height:1;
+}
+
+/* When a tool is favorited, JS sets li.tool.is-fav */
+li.tool.is-fav .star{
+  background:#d4af37;
+  border-color:#d4af37;
+  color:#000;
+}
 /* Drawer panels */
 .drawer{
   position:fixed;
