@@ -332,7 +332,7 @@
       applyFilters();
     });
 
-    /* ----- Editor drawer (override lines) ----- */
+    /* ----- Editor drawer (override lines) ----- TO-DO EDITOR NO LONGER MATCHES TEST SITE. THIS EDITOR IS NOT USEFUL*/
     const editorDrawer = $('#editorDrawer');
     const btnEditor = $('#btnEditor');
     const btnEditorClose = $('#btnEditorClose');
