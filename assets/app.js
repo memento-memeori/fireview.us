@@ -492,4 +492,211 @@
   } else {
     init();
   }
+})
+/* ===== Embedded IP Whois (ipapi.co) ===== */
+(() => {
+  'use strict';
+
+  const input = document.getElementById('ipInput');
+  const btnLookup = document.getElementById('btnIpLookup');
+  const btnClear = document.getElementById('btnIpClear');
+  const btnExport = document.getElementById('btnIpExport');
+  const tbody = document.getElementById('ipTbody');
+  const status = document.getElementById('ipStatus');
+
+  if (!input || !btnLookup || !btnClear || !btnExport || !tbody || !status) return;
+
+  // Provider: ipapi.co
+  // Example: https://ipapi.co/8.8.8.8/json/
+  const endpoint = (ip) => `https://ipapi.co/${encodeURIComponent(ip)}/json/`;
+
+  // Basic IP/IPv6 sanity check (not strict validation; avoids obvious junk)
+  const looksLikeIp = (s) => {
+    const x = (s || '').trim();
+    if (!x) return false;
+    if (x.includes(':')) return /^[0-9a-fA-F:]+$/.test(x) && x.length >= 3;  // IPv6-ish
+    return /^(\d{1,3}\.){3}\d{1,3}$/.test(x); // IPv4-ish
+  };
+
+  const uniq = (arr) => Array.from(new Set(arr));
+
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+  // Concurrency limit to reduce provider throttling
+  async function mapPool(items, limit, fn) {
+    const ret = [];
+    let i = 0;
+    const workers = Array.from({ length: limit }, async () => {
+      while (i < items.length) {
+        const idx = i++;
+        ret[idx] = await fn(items[idx], idx);
+      }
+    });
+    await Promise.all(workers);
+    return ret;
+  }
+
+  function setStatus(msg) { status.textContent = msg; }
+
+  function clearTable() {
+    tbody.innerHTML = '';
+    btnExport.disabled = true;
+  }
+
+  function rowHtml(r) {
+    const geo = r.geo || '';
+    const country = r.country || '';
+    const asn = r.asn || '';
+    const isp = r.isp || '';
+    const company = r.company || '';
+    const ip = r.ip || '';
+
+    return `
+      <tr>
+        <td><code>${escapeHtml(ip)}</code></td>
+        <td>${escapeHtml(isp)}</td>
+        <td>${escapeHtml(company)}</td>
+        <td>${escapeHtml(asn)}</td>
+        <td>${escapeHtml(geo)}</td>
+        <td>${escapeHtml(country)}</td>
+      </tr>
+    `;
+  }
+
+  // Prevent HTML injection from remote strings
+  function escapeHtml(s) {
+    return String(s ?? '')
+      .replaceAll('&', '&amp;')
+      .replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;')
+      .replaceAll('"', '&quot;')
+      .replaceAll("'", '&#039;');
+  }
+
+  function normalizeRows(ip, data) {
+    // ipapi.co fields: region, region_code, country_name, country_code, org, asn, etc. :contentReference[oaicite:6]{index=6}
+    const region = data?.region || '';
+    const regionCode = data?.region_code || '';
+    const countryName = data?.country_name || '';
+    const countryCode = data?.country_code || '';
+    const org = data?.org || data?.organization || '';
+    const asn = data?.asn || '';
+
+    // Your requirement: “US state or International Country”
+    // We display region for US-like results; otherwise show country.
+    const geo =
+      (region && (countryCode === 'US' || countryName === 'United States')) ? `${region}${regionCode ? ` (${regionCode})` : ''}`
+      : (countryName || region || '');
+
+    return {
+      ip,
+      isp: org || '',
+      company: org || '',
+      asn: asn || '',
+      geo: geo || '',
+      country: countryName || ''
+    };
+  }
+
+  function toCsv(rows) {
+    const headers = ['ip', 'isp_org', 'company', 'asn', 'geo', 'country'];
+    const esc = (v) => {
+      const s = String(v ?? '');
+      const needs = /[",\n]/.test(s);
+      return needs ? `"${s.replaceAll('"', '""')}"` : s;
+    };
+    const lines = [
+      headers.join(','),
+      ...rows.map(r => headers.map(h => esc(r[h])).join(','))
+    ];
+    return lines.join('\n');
+  }
+
+  function download(filename, text) {
+    const blob = new Blob([text], { type: 'text/csv;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  }
+
+  let lastRows = [];
+
+  async function lookupOne(ip) {
+    // Small delay helps avoid burst throttling
+    await sleep(80);
+
+    const res = await fetch(endpoint(ip), { method: 'GET' });
+    if (!res.ok) {
+      return { ip, error: `HTTP ${res.status}` };
+    }
+    const data = await res.json();
+    if (data?.error) {
+      return { ip, error: String(data?.reason || data?.error) };
+    }
+    return normalizeRows(ip, data);
+  }
+
+  btnLookup.addEventListener('click', async () => {
+    clearTable();
+    lastRows = [];
+
+    const raw = (input.value || '')
+      .split('\n')
+      .map(x => x.trim())
+      .filter(Boolean);
+
+    const ips = uniq(raw).filter(looksLikeIp);
+
+    if (ips.length === 0) {
+      setStatus('No valid IPs found.');
+      return;
+    }
+
+    setStatus(`Looking up ${ips.length} IP(s)…`);
+
+    // Pool of 4 concurrent lookups
+    const results = await mapPool(ips, 4, async (ip) => {
+      try {
+        return await lookupOne(ip);
+      } catch (e) {
+        return { ip, error: (e && e.message) ? e.message : 'Request failed' };
+      }
+    });
+
+    // Render
+    const good = results.filter(r => !r.error);
+    const bad = results.filter(r => r.error);
+
+    tbody.innerHTML = [
+      ...good.map(rowHtml),
+      ...bad.map(b => `
+        <tr>
+          <td><code>${escapeHtml(b.ip)}</code></td>
+          <td colspan="5">Error: ${escapeHtml(b.error)}</td>
+        </tr>
+      `)
+    ].join('');
+
+    lastRows = good;
+    btnExport.disabled = good.length === 0;
+
+    setStatus(`Done. ${good.length} success, ${bad.length} failed.`);
+  });
+
+  btnClear.addEventListener('click', () => {
+    input.value = '';
+    clearTable();
+    setStatus('');
+  });
+
+  btnExport.addEventListener('click', () => {
+    if (!lastRows.length) return;
+    const csv = toCsv(lastRows);
+    download(`ip-whois-${new Date().toISOString().slice(0,10)}.csv`, csv);
+  });
 })();
