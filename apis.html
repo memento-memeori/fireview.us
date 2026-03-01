@@ -3,7 +3,15 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none';"/>
+<meta http-equiv="Content-Security-Policy"
+  content="default-src 'self';
+           img-src 'self' data:;
+           style-src 'self';
+           script-src 'self';
+           connect-src 'self' https://ipapi.co;
+           base-uri 'self';
+           form-action 'self';
+           object-src 'none';"/>
 <title>Fireview API Directory</title>
 <nav class="site-nav">
   <a href="index.html" class="nav-link">Tools</a>
@@ -31,7 +39,7 @@
 
       <!-- API category labels -->
       <div class="badges" id="badges">
-        <a class="badge" href="#script-converter"><span>Script Converter</span> <span class="count">(1)</span></a>
+        <a class="badge" href="#custom-built-apis"><span>Custom Built API's</span> <span class="count">(2)</span></a>
         <a class="badge" href="#third-party-apis"><span>3rd Party APIs</span> <span class="count">(0)</span></a>
       </div>
     </div>
@@ -40,10 +48,49 @@
 
 <main id="main">
   <!-- Custom Built APIs -->
-<section id="Script Converter">
-  <h2>Script Converter</h2>
+<section id="Custom Built API's">
+  <!-- IP Whois Lookup -->
+<section id="ip-whois" data-category="Network, IP &amp; Infrastructure">
+  <h2>IP Whois (Embedded)</h2>
+  <div class="note">Paste one IP per line. Results render below. Export as CSV.</div>
 
-  <!-- JSON Converter -->
+  <div class="ipwhois-box">
+    <textarea id="ipInput" class="ta" rows="6" spellcheck="false"
+      placeholder="Examples:
+8.8.8.8
+1.1.1.1
+2606:4700:4700::1111"></textarea>
+
+    <div class="row">
+      <button class="btn" id="btnIpLookup" type="button">Lookup</button>
+      <button class="btn" id="btnIpClear" type="button">Clear</button>
+      <button class="btn ghost" id="btnIpExport" type="button" disabled>Export CSV</button>
+    </div>
+
+    <div id="ipStatus" class="results" aria-live="polite"></div>
+
+    <div class="ipwhois-table-wrap">
+      <table class="ipwhois-table" id="ipTable" aria-label="IP Whois results">
+        <thead>
+          <tr>
+            <th>IP</th>
+            <th>ISP / Org</th>
+            <th>Company</th>
+            <th>ASN</th>
+            <th>Geo</th>
+            <th>Country</th>
+          </tr>
+        </thead>
+        <tbody id="ipTbody"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+  <!-- IP whois Lookup End -->
+  
+  <!--Universal Script Converter -->
+  <section id="Universal Script Converter">
+  <h2>Script Converter</h2>
   <h3 class="mini-title">Universal Script Converter</h3>
 
   <div class="panel" id="universalConverter">
@@ -102,7 +149,8 @@
     <textarea id="convOut" class="ta" readonly placeholder="Converted JSON will appear here…"></textarea>
   </div>
 </section>
-
+<!-- Universal Script Converter End -->
+  
   <!-- 3rd Party APIs -->
   <section id="third-party-apis" data-category="3rd Party APIs">
     <h2>3rd Party APIs</h2>
@@ -187,6 +235,7 @@ Contact: fireview.me (at) gmail
 <script src="assets/convert_api.js" defer></script>
 </body>
 </html>
+
 
 
 
